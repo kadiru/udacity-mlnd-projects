@@ -12464,10 +12464,10 @@ Testing set has 95 samples.
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer: </strong></p>
-<h2 id="ENSEMBLE-METHODS">ENSEMBLE METHODS<a class="anchor-link" href="#ENSEMBLE-METHODS">&#182;</a></h2><p>Some of the example application areas noted in this survey[1] are Remote Sensing, computer security, financial risk ananlysis, medicine, recommender systems.</p>
-<h4 id="Reasons-for-choosing">Reasons for choosing<a class="anchor-link" href="#Reasons-for-choosing">&#182;</a></h4><p>Among those, recommender systems are particularly interesting for me. They gather information about the online behavior of a user and make estimations based on those to predict the future action of the user/customer. Most of the extracted features are related to the items visited/purchased/engaged with. Labels can be "purchased", "wishlisted", "visited" and so on. Therefore prediction of the future actions/items can be used to recommend the best actions to the user to improve their online shopping experience. This is very similar to the current task of student intervention in terms of (i)the features collected based on the history of similar encounters and (ii)prediction of the possibility of a future event. I found boosting methods more comprehensive than averaging methods as they try to reduce the bias of the added weak classifier rather than taking what is classifies as is. I wanted to see how powerful can it be to combine weak classifiers when it comes to the prediction accuracy.</p>
-<h4 id="Strenghts">Strenghts<a class="anchor-link" href="#Strenghts">&#182;</a></h4><p>Ability to fuse various learning methods to come up with the best prediction by voting, stacking, bagging and boosting.</p>
-<h4 id="Weaknesses">Weaknesses<a class="anchor-link" href="#Weaknesses">&#182;</a></h4><p>Ensemble methods are not guaranteed to perform the best. Its performance depends on the fusion method used. Moreover, ensemble methods may require a larger data set to train all of the learners.</p>
+<h2 id="Adaboost">Adaboost<a class="anchor-link" href="#Adaboost">&#182;</a></h2><p>Some of the example application areas noted in this survey[1] are Remote Sensing, computer security, financial risk ananlysis, medicine, recommender systems.</p>
+<h4 id="Reasons-for-choosing">Reasons for choosing<a class="anchor-link" href="#Reasons-for-choosing">&#182;</a></h4><p>Among those, recommender systems are particularly interesting for me. They gather information about the online behavior of a user and make estimations based on those to predict the future action of the user/customer. Most of the extracted features are related to the items visited/purchased/engaged with. Labels can be "purchased", "wishlisted", "visited" and so on. Therefore prediction of the future actions/items can be used to recommend the best actions to the user to improve their online shopping experience. I prefered Adaboost because student intervention is kind of a recommendation system since (i)the features are collected based on the history of similar encounters and (ii)possibility of a future event is the targeted outcome of the classifier.</p>
+<h4 id="Strenghts">Strenghts<a class="anchor-link" href="#Strenghts">&#182;</a></h4><p>Boosting seems to perform better than bagging as every new training-set subsets contains the elements that were (likely to be) misclassified by previous models [4].</p>
+<h4 id="Weaknesses">Weaknesses<a class="anchor-link" href="#Weaknesses">&#182;</a></h4><p>Adaboost is not guaranteed to perform the best and it may require a larger data set to train all of the learners.</p>
 <h2 id="Stochastic-Gradient-Descent(SGD)">Stochastic Gradient Descent(SGD)<a class="anchor-link" href="#Stochastic-Gradient-Descent(SGD)">&#182;</a></h2><p>It is used to minimize an objective function written in the form of sum of differentiable functions. It is the predominant methodology in training deep learning models. It works almost like the ordinary gradient descent, but quicker by estimating the gradient based on few examples (most of the time randomly picked one example) at a time instead of the entire training set like the gradient descent does.</p>
 <h4 id="Reasons-for-choosing">Reasons for choosing<a class="anchor-link" href="#Reasons-for-choosing">&#182;</a></h4><p>A simple and quick method. Nice to see it against other more complicated methods.</p>
 <h4 id="Strenghts">Strenghts<a class="anchor-link" href="#Strenghts">&#182;</a></h4><p>SGD converges fast and allows incorporation of newly captured samples in a more real-time fashion.</p>
@@ -12479,6 +12479,7 @@ Testing set has 95 samples.
 <p>[1] Woźniak, Michał, Manuel Graña, and Emilio Corchado. "A survey of multiple classifier systems as hybrid systems." Information Fusion 16 (2014): 3-17.</p>
 <p>[2] Ngiam, Jiquan, et al. "On optimization methods for deep learning." Proceedings of the 28th International Conference on Machine Learning (ICML-11). 2011.</p>
 <p>[3] Weinberger, Kilian Q., John Blitzer, and Lawrence K. Saul. "Distance metric learning for large margin nearest neighbor classification." Advances in neural information processing systems. 2005.</p>
+<p>[4] <a href="http://stats.stackexchange.com/questions/18891/bagging-boosting-and-stacking-in-machine-learning">http://stats.stackexchange.com/questions/18891/bagging-boosting-and-stacking-in-machine-learning</a></p>
 
 </div>
 </div>
@@ -12576,7 +12577,7 @@ Testing set has 95 samples.
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># TODO: Import the three supervised learning models from sklearn</span>
@@ -12586,9 +12587,9 @@ Testing set has 95 samples.
 
 <span class="c1"># TODO: Initialize the three models</span>
 <span class="c1"># clf_A = SGDClassifier(loss=&quot;hinge&quot;, penalty=&quot;l2&quot;)</span>
-<span class="n">clf_A</span> <span class="o">=</span> <span class="n">SGDClassifier</span><span class="p">()</span>
+<span class="n">clf_A</span> <span class="o">=</span> <span class="n">SGDClassifier</span><span class="p">(</span><span class="n">random_state</span> <span class="o">=</span> <span class="mi">42</span><span class="p">)</span>
 <span class="c1"># clf_B = AdaBoostClassifier(n_estimators=100)</span>
-<span class="n">clf_B</span> <span class="o">=</span> <span class="n">AdaBoostClassifier</span><span class="p">()</span>
+<span class="n">clf_B</span> <span class="o">=</span> <span class="n">AdaBoostClassifier</span><span class="p">(</span><span class="n">random_state</span> <span class="o">=</span> <span class="mi">42</span><span class="p">)</span>
 <span class="c1"># clf_C = KNeighborsClassifier(15, weights=&#39;distance&#39;)</span>
 <span class="n">clf_C</span> <span class="o">=</span> <span class="n">KNeighborsClassifier</span><span class="p">()</span>
 
@@ -12623,59 +12624,59 @@ Testing set has 95 samples.
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Training a AdaBoostClassifier using a training set size of 100. . .
-Trained model in 0.1340 seconds
-Made predictions in 0.0080 seconds.
-F1 score for training set: 0.9778.
+Trained model in 0.1350 seconds
 Made predictions in 0.0070 seconds.
+F1 score for training set: 0.9778.
+Made predictions in 0.0080 seconds.
 F1 score for test set: 0.6880.
 Training a AdaBoostClassifier using a training set size of 200. . .
-Trained model in 0.1370 seconds
+Trained model in 0.1450 seconds
 Made predictions in 0.0090 seconds.
 F1 score for training set: 0.8905.
-Made predictions in 0.0080 seconds.
+Made predictions in 0.0070 seconds.
 F1 score for test set: 0.7445.
 Training a AdaBoostClassifier using a training set size of 300. . .
-Trained model in 0.1420 seconds
-Made predictions in 0.0100 seconds.
-F1 score for training set: 0.8565.
+Trained model in 0.1480 seconds
 Made predictions in 0.0110 seconds.
+F1 score for training set: 0.8565.
+Made predictions in 0.0070 seconds.
 F1 score for test set: 0.7328.
+Training a SGDClassifier using a training set size of 100. . .
+Trained model in 0.0010 seconds
+Made predictions in 0.0010 seconds.
+F1 score for training set: 0.8075.
+Made predictions in 0.0000 seconds.
+F1 score for test set: 0.8025.
+Training a SGDClassifier using a training set size of 200. . .
+Trained model in 0.0010 seconds
+Made predictions in 0.0000 seconds.
+F1 score for training set: 0.8212.
+Made predictions in 0.0000 seconds.
+F1 score for test set: 0.7703.
+Training a SGDClassifier using a training set size of 300. . .
+Trained model in 0.0010 seconds
+Made predictions in 0.0010 seconds.
+F1 score for training set: 0.7960.
+Made predictions in 0.0000 seconds.
+F1 score for test set: 0.7500.
 Training a KNeighborsClassifier using a training set size of 100. . .
 Trained model in 0.0010 seconds
 Made predictions in 0.0020 seconds.
 F1 score for training set: 0.8252.
-Made predictions in 0.0010 seconds.
+Made predictions in 0.0020 seconds.
 F1 score for test set: 0.7586.
 Training a KNeighborsClassifier using a training set size of 200. . .
 Trained model in 0.0010 seconds
 Made predictions in 0.0040 seconds.
 F1 score for training set: 0.8097.
-Made predictions in 0.0020 seconds.
+Made predictions in 0.0030 seconds.
 F1 score for test set: 0.7857.
 Training a KNeighborsClassifier using a training set size of 300. . .
-Trained model in 0.0010 seconds
+Trained model in 0.0020 seconds
 Made predictions in 0.0090 seconds.
 F1 score for training set: 0.8539.
 Made predictions in 0.0050 seconds.
 F1 score for test set: 0.8138.
-Training a SGDClassifier using a training set size of 100. . .
-Trained model in 0.0010 seconds
-Made predictions in 0.0000 seconds.
-F1 score for training set: 0.7952.
-Made predictions in 0.0000 seconds.
-F1 score for test set: 0.8050.
-Training a SGDClassifier using a training set size of 200. . .
-Trained model in 0.0010 seconds
-Made predictions in 0.0010 seconds.
-F1 score for training set: 0.8037.
-Made predictions in 0.0000 seconds.
-F1 score for test set: 0.8050.
-Training a SGDClassifier using a training set size of 300. . .
-Trained model in 0.0010 seconds
-Made predictions in 0.0000 seconds.
-F1 score for training set: 0.8057.
-Made predictions in 0.0010 seconds.
-F1 score for test set: 0.8077.
 </pre>
 </div>
 </div>
@@ -12712,24 +12713,24 @@ F1 score for test set: 0.8077.
 <tbody>
 <tr>
 <td style="text-align:center">100</td>
+<td style="text-align:center">0.0010</td>
 <td style="text-align:center">0.0000</td>
-<td style="text-align:center">0.0000</td>
-<td style="text-align:center">0.8153</td>
-<td style="text-align:center">0.7947</td>
+<td style="text-align:center">0.8075</td>
+<td style="text-align:center">0.8025</td>
 </tr>
 <tr>
 <td style="text-align:center">200</td>
 <td style="text-align:center">0.0010</td>
 <td style="text-align:center">0.0000</td>
-<td style="text-align:center">0.7950</td>
-<td style="text-align:center">0.8052</td>
+<td style="text-align:center">0.8212</td>
+<td style="text-align:center">0.7703</td>
 </tr>
 <tr>
 <td style="text-align:center">300</td>
 <td style="text-align:center">0.0010</td>
 <td style="text-align:center">0.0000</td>
-<td style="text-align:center">0.8180</td>
-<td style="text-align:center">0.7838</td>
+<td style="text-align:center">0.7960</td>
+<td style="text-align:center">0.7500</td>
 </tr>
 </tbody>
 </table>
@@ -12746,22 +12747,22 @@ F1 score for test set: 0.8077.
 <tbody>
 <tr>
 <td style="text-align:center">100</td>
-<td style="text-align:center">0.1290</td>
-<td style="text-align:center">0.0070</td>
+<td style="text-align:center">0.1350</td>
+<td style="text-align:center">0.0080</td>
 <td style="text-align:center">0.9778</td>
 <td style="text-align:center">0.6880</td>
 </tr>
 <tr>
 <td style="text-align:center">200</td>
-<td style="text-align:center">0.1360</td>
-<td style="text-align:center">0.0080</td>
+<td style="text-align:center">0.1450</td>
+<td style="text-align:center">0.0070</td>
 <td style="text-align:center">0.8905</td>
 <td style="text-align:center">0.7445</td>
 </tr>
 <tr>
 <td style="text-align:center">300</td>
-<td style="text-align:center">0.1400</td>
-<td style="text-align:center">0.0080</td>
+<td style="text-align:center">0.1480</td>
+<td style="text-align:center">0.0070</td>
 <td style="text-align:center">0.8565</td>
 <td style="text-align:center">0.7328</td>
 </tr>
@@ -12788,13 +12789,13 @@ F1 score for test set: 0.8077.
 <tr>
 <td style="text-align:center">200</td>
 <td style="text-align:center">0.0010</td>
-<td style="text-align:center">0.0040</td>
+<td style="text-align:center">0.0030</td>
 <td style="text-align:center">0.8097</td>
 <td style="text-align:center">0.7857</td>
 </tr>
 <tr>
 <td style="text-align:center">300</td>
-<td style="text-align:center">0.0010</td>
+<td style="text-align:center">0.0020</td>
 <td style="text-align:center">0.0050</td>
 <td style="text-align:center">0.8539</td>
 <td style="text-align:center">0.8138</td>
@@ -12832,7 +12833,7 @@ F1 score for test set: 0.8077.
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer: </strong></p>
 <h4 id="[OLD-ANSWER]">[OLD ANSWER]<a class="anchor-link" href="#[OLD-ANSWER]">&#182;</a></h4><p>I would choose SGDClassifier since it has a monotonically increasing trend in getting better F1 scores based on the test data. Although KNeighborsClassifier seems to be better in the overall result, it's performance is decreasing after 200 samples in the training set. Hence, if we collect and train our prediction model with a larger data set, SGDClassifier seems to perform better than the others. SGDClassifier's training and testing times are also better than the other classifier.</p>
-<h4 id="[UPDATED-ANSWER]">[UPDATED ANSWER]<a class="anchor-link" href="#[UPDATED-ANSWER]">&#182;</a></h4><p>Every time I run this experiment I've got different results, especually the F1 test scores varied a lot. KNeighbors seems to be performing as good as SGDClassifer and its performance is increasing with the increasing training set size. I think this is more important than other metrics because this means that the classifier might be learning better every time it sees a new sample. Therefore, it will perform better and better in time. But it is definitely not Adaboost as its training and testing performance degrades with the increasing training data set size in terms of training time and training and testing f1 scores.</p>
+<h4 id="[UPDATED-ANSWER]">[UPDATED ANSWER]<a class="anchor-link" href="#[UPDATED-ANSWER]">&#182;</a></h4><p>KNeighbors seems to be performing as good as SGDClassifer and its performance is increasing with the increasing training set size. I think this is more important than other metrics because this means that the classifier might be learning better every time it sees a new sample. Therefore, it will perform better and better in time. But winner is definitely not Adaboost as its training and testing performance(viz. f1 scores) degrades with the increasing training data size.</p>
 
 </div>
 </div>
@@ -12883,7 +12884,7 @@ F1 score for test set: 0.8077.
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[36]:</div>
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># TODO: Import &#39;GridSearchCV&#39; and &#39;make_scorer&#39;</span>
@@ -12897,7 +12898,7 @@ F1 score for test set: 0.8077.
 <span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">SGDClassifier</span>
 <span class="c1"># clf = SGDClassifier(loss=&quot;hinge&quot;, penalty=parameters[&#39;penalty&#39;])</span>
 <span class="c1"># clf = SGDClassifier(loss=&#39;hinge&#39;, penalty=&#39;l2&#39;)</span>
-<span class="n">clf</span> <span class="o">=</span> <span class="n">SGDClassifier</span><span class="p">()</span>
+<span class="n">clf</span> <span class="o">=</span> <span class="n">SGDClassifier</span><span class="p">(</span><span class="n">random_state</span> <span class="o">=</span> <span class="mi">42</span><span class="p">)</span>
 
 <span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">f1_score</span>
 
@@ -12958,22 +12959,22 @@ F1 score for test set: 0.8077.
 
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Made predictions in 0.0010 seconds.
+<pre>Made predictions in 0.0000 seconds.
 Tuned model has a training F1 score of 0.8024.
 Made predictions in 0.0000 seconds.
-Tuned model has a testing F1 score of 0.7838.
+Tuned model has a testing F1 score of 0.7975.
 Fitting 5 folds for each of 9 candidates, totalling 45 fits
 Made predictions in 0.0010 seconds.
-Tuned model has a training F1 score of 0.8147.
+Tuned model has a training F1 score of 0.8024.
 Made predictions in 0.0000 seconds.
-Tuned model has a testing F1 score of 0.7801.
+Tuned model has a testing F1 score of 0.8054.
 </pre>
 </div>
 </div>
 
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stderr output_text">
-<pre>[Parallel(n_jobs=-1)]: Done  45 out of  45 | elapsed:    6.7s finished
+<pre>[Parallel(n_jobs=-1)]: Done  45 out of  45 | elapsed:    6.9s finished
 </pre>
 </div>
 </div>
@@ -12997,7 +12998,7 @@ Tuned model has a testing F1 score of 0.7801.
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><strong>Answer: </strong> Tuned model has a slightly better performance in training [0.8180 &lt;-&gt; 0.8403] and testing [0.7838 &lt;-&gt; 0.8054]. Yet, these parameters do not seem to make huge difference in training and testing performance. Default parameter settings seem to be working well for this particular dataset and for SGDClassifier. This might be because of the small data size size. Since data set is small, it may effect the performance of the training and testing considerably depending on how data set is split. Every time I run the experiment, I get different results. I also tried to increase the number of folds in the grid search and normalize the features, results didn't change much for the SGDClassifier. I believe normalizing the features doesn't effect the performance of the gradient descent as it considers the rate of change other than unit or magnitude of features.</p>
+<p><strong>Answer: </strong> Tuned model has a slightly better performance in training [0.8024 &lt;-&gt; 0.8024] and testing [0.7975 &lt;-&gt; 0.8054]. Yet, these parameters do not seem to make huge difference in training and testing performance. Default parameter settings seem to be working well for this particular dataset and for SGDClassifier. This might be because of the small data size size. Since data set is small, it may effect the performance of the training and testing considerably depending on how data set is split. Every time I run the experiment, I get different results. I also tried to increase the number of folds in the grid search and normalize the features, results didn't change much for the SGDClassifier. I believe normalizing the features doesn't effect the performance of the gradient descent as it considers the rate of change other than unit or magnitude of features.</p>
 
 </div>
 </div>

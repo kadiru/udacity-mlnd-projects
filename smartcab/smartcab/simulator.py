@@ -158,10 +158,10 @@ class Simulator(object):
 
             # DONE:
             if self.env.primary_agent.learning:
-                a = 0.999
-                self.env.primary_agent.epsilon = pow(a, trial)
-                #a = 0.99
-                #self.env.primary_agent.epsilon = np.exp(-a*trial)
+                a_ = 0.999
+                self.env.primary_agent.epsilon = pow(a_, trial)
+                #a_ = 0.99
+                #self.env.primary_agent.epsilon = np.exp(-a_*trial)
             self.env.reset(testing)
             self.current_time = 0.0
             self.last_updated = 0.0

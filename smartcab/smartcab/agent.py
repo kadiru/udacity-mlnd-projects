@@ -26,6 +26,8 @@ class LearningAgent(Agent):
         ## TO DO ##
         ###########
         # Set any additional class parameters as needed
+        self.a_ = 0.999
+        self.trial = 0
 
 
     def reset(self, destination=None, testing=False):
@@ -42,12 +44,12 @@ class LearningAgent(Agent):
         # Update epsilon using a decay function of your choice
         # Update additional class parameters as needed
         # If 'testing' is True, set epsilon and alpha to 0
-        #if self.learning:
-            #self.epsilon=self.epsilon - 0.05
 
         if testing:
             self.epsilon = 0.0
             self.alpha = 0.0
+        else:
+            self.epsilon = pow(self.a_, self.trial)
         return None
 
     def build_state(self):
@@ -69,8 +71,8 @@ class LearningAgent(Agent):
         #   For each action, set the Q-value for the state-action pair to 0
         
         #state = (waypoint, inputs['light'], inputs['oncoming'], inputs['left'], inputs['right'], deadline)
-        #state = (waypoint, inputs['light'], inputs['oncoming'], deadline)
-        state = (waypoint, inputs['light'], inputs['oncoming'])
+        state = (waypoint, inputs['light'], inputs['oncoming'], deadline)
+        #state = (waypoint, inputs['light'], inputs['oncoming'], inputs['left'])
         return state
 
 
@@ -82,8 +84,9 @@ class LearningAgent(Agent):
         ## TO DO ##
         ###########
         # Calculate the maximum Q-value of all actions for a given state
+        # dictionary of action value pairs
         d_a_v = self.Q[state]
-       
+        # sort them from high value to low value to randomly pick from the actions that have the same highest value
         sorted_a_v = sorted(d_a_v.items(), key=operator.itemgetter(1), reverse=True)
         max_v = sorted_a_v[0][1]
         actions = []
@@ -91,9 +94,7 @@ class LearningAgent(Agent):
             if value == max_v:
                 actions.append(key)
                 
-        random.seed(25)
         actionid = random.randint(0,len(actions)-1)
-
         return sorted_a_v[actionid][0]
 
 
@@ -109,6 +110,7 @@ class LearningAgent(Agent):
         
         if self.learning:
             if state not in self.Q:
+                # dictionary of action value pairs
                 d_a_v = {}
                 for action in self.valid_actions:
                     d_a_v[action]=0.0
@@ -129,18 +131,15 @@ class LearningAgent(Agent):
         ###########
         # When not learning, choose a random action
         if not self.learning:
-            random.seed(42)
-            actionid = random.randint(0,3)
-            return self.valid_actions[actionid]
+            return random.choice(self.valid_actions)
+
         else:
         # When learning, choose a random action with 'epsilon' probability
         #   Otherwise, choose an action with the highest Q-value for the current state
-            random.seed(42)
+            #random.seed(42)
             rand_prob = random.randint(0, 99)/100.0
             if rand_prob < self.epsilon:
-                random.seed(42)
-                actionid = random.randint(0,3)
-                return self.valid_actions[actionid]
+                return random.choice(self.valid_actions)
             else:
                 action = self.get_maxQ(self.state)
                 return action

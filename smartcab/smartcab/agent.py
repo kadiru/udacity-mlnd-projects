@@ -5,6 +5,7 @@ from planner import RoutePlanner
 from simulator import Simulator
 
 import random
+import operator
 
 class LearningAgent(Agent):
     """ An agent that learns to drive in the Smartcab world.
@@ -47,7 +48,6 @@ class LearningAgent(Agent):
         if testing:
             self.epsilon = 0.0
             self.alpha = 0.0
-
         return None
 
     def build_state(self):
@@ -68,7 +68,8 @@ class LearningAgent(Agent):
         #   If it is not, create a dictionary in the Q-table for the current 'state'
         #   For each action, set the Q-value for the state-action pair to 0
         
-        state = (waypoint, inputs['light'], inputs['oncoming'], inputs['left'], inputs['right'], deadline)
+        #state = (waypoint, inputs['light'], inputs['oncoming'], inputs['left'], inputs['right'], deadline)
+        state = (waypoint, inputs['light'], inputs['oncoming'], deadline)
         return state
 
 
@@ -81,14 +82,18 @@ class LearningAgent(Agent):
         ###########
         # Calculate the maximum Q-value of all actions for a given state
         d_a_v = self.Q[state]
-        max_qvalue = -float('inf')
-        max_q_action = 'None'
-        for action, qvalue in d_a_v.iteritems():
-            if qvalue > max_qvalue:
-                max_qvalue=qvalue
-                max_q_action = action
+       
+        sorted_a_v = sorted(d_a_v.items(), key=operator.itemgetter(1), reverse=True)
+        max_v = sorted_a_v[0][1]
+        actions = []
+        for key, value in d_a_v.iteritems():
+            if value == max_v:
+                actions.append(key)
+                
+        random.seed(25)
+        actionid = random.randint(0,len(actions)-1)
 
-        return max_q_action, max_qvalue
+        return sorted_a_v[actionid][0]
 
 
     def createQ(self, state):
@@ -136,7 +141,7 @@ class LearningAgent(Agent):
                 actionid = random.randint(0,3)
                 return self.valid_actions[actionid]
             else:
-                action, qvalue = self.get_maxQ(self.state)
+                action = self.get_maxQ(self.state)
                 return action
 
     def learn(self, state, action, reward):
@@ -151,8 +156,7 @@ class LearningAgent(Agent):
         #   Use only the learning rate 'alpha' (do not use the discount factor 'gamma')
         if self.learning:
             #self.Q[state][action] += self.alpha*(reward)
-            self.Q[state][action] += self.alpha*(reward)
-
+            self.Q[state][action] += self.alpha*(reward - self.Q[state][action])
         return
 
 
@@ -190,7 +194,7 @@ def run():
     #    * alpha   - continuous value for the learning rate, default is 0.5
     #agent = env.create_agent(LearningAgent)
     #agent = env.create_agent(LearningAgent, learning=True)
-    agent = env.create_agent(LearningAgent, learning=True, alpha=0.10, epsilon=1.0)
+    agent = env.create_agent(LearningAgent, learning=True, alpha=0.10, epsilon=0.8)
     
     ##############
     # Follow the driving agent
@@ -207,7 +211,7 @@ def run():
     #   log_metrics  - set to True to log trial and simulation results to /logs
     #   optimized    - set to True to change the default log file name
     #sim = Simulator(env, update_delay=0.01, log_metrics=True, display=False)
-    sim = Simulator(env, update_delay=0.01, log_metrics=True, optimized=True, display=False)
+    sim = Simulator(env, update_delay=0.001, log_metrics=True, optimized=True, display=False)
     #sim = Simulator(env)
     
     ##############
@@ -217,7 +221,7 @@ def run():
     #   n_test     - discrete number of testing trials to perform, default is 0
     #sim.run()
     #sim.run(n_test=10)
-    sim.run(n_test=10, tolerance=0.01)
+    sim.run(n_test=100, tolerance=0.01)
 
 
 if __name__ == '__main__':

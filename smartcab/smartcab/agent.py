@@ -71,8 +71,8 @@ class LearningAgent(Agent):
         #   For each action, set the Q-value for the state-action pair to 0
         
         #state = (waypoint, inputs['light'], inputs['oncoming'], inputs['left'], inputs['right'], deadline)
-        state = (waypoint, inputs['light'], inputs['oncoming'], deadline)
-        #state = (waypoint, inputs['light'], inputs['oncoming'], inputs['left'])
+        #state = (waypoint, inputs['light'], inputs['oncoming'], deadline)
+        state = (waypoint, inputs['light'], inputs['oncoming'], inputs['left'])
         return state
 
 
@@ -194,7 +194,7 @@ def run():
     #    * alpha   - continuous value for the learning rate, default is 0.5
     #agent = env.create_agent(LearningAgent)
     #agent = env.create_agent(LearningAgent, learning=True)
-    agent = env.create_agent(LearningAgent, learning=True, alpha=0.50, epsilon=0.8)
+    agent = env.create_agent(LearningAgent, learning=True, alpha=0.25, epsilon=0.8)
     
     ##############
     # Follow the driving agent
@@ -221,7 +221,7 @@ def run():
     #   n_test     - discrete number of testing trials to perform, default is 0
     #sim.run()
     #sim.run(n_test=10)
-    sim.run(n_test=20, tolerance=0.01)
+    sim.run(n_test=100, tolerance=0.01)
 
 
 if __name__ == '__main__':

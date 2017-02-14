@@ -13554,11 +13554,11 @@ No, because it takes random actions and causes major or minor accidents 23% of t
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer:</strong><br>
 Let's simplify the learning problem. Let there be no traffic rules and no traffic, smartcab should be able to learn a sequence of actions that will enable smartcab to reach to its destination just based on the feature <strong>waypoint</strong>.</p>
-<p>If deadline is not enforced, there is no use for <strong>deadline</strong> in anyways. Assuming that deadline is enforced, deadline only changes the amplitude of the reward obtained when the agent take the best action towards reaching its goal. In other words, it actually doesn't have any effect on the learnability of this task. Given a limited number of trials, deadline may change the quality of the safety and reliability measures. Therefore, if there is enough time deadline becomes redundant. Using deadline might reduce the learning performance of the safety factor. It might cause passing in the red light. However, meeting the deadline may not be as important as avoiding a major viloation like passing in the red light (-10 points), or avoiding a minor (-20 points) or major accident (-40 points).  Every time the agent moves after the deadline it gets about -1 penalty. Therefore it would learn passing the in the red light only when it overshoots the deadline by at least 10-block-distance which is hardy the case for a small grid world like this one (8 grids x 6 grids). It was a big grid map, passing in the red light might while still avoiding the minor and major accidents would be something more common for the smartcab.</p>
+<p>Assuming that deadline is enforced, <strong>deadline</strong> only changes the amplitude of the reward obtained when the agent take the best action towards reaching its goal. In other words, it actually doesn't have any effect on the learnability of this task. Given a limited number of trials, deadline may change the quality of the safety and reliability measures. Therefore, if there is enough time deadline becomes redundant. Using deadline might reduce the learning performance of the safety factor. It might cause passing in the red light. However, meeting the deadline may not be as important as avoiding a major violation like passing in the red light (-10 points), or avoiding a minor (-20 points) or major accident (-40 points).  Every time the agent moves after the deadline it gets about -1 penalty. Therefore it would learn passing the in the red light only when it overshoots the deadline by at least 10-block-distance which is hardly the case for a small grid world like this one (8 grids x 6 grids). If it was a big grid map, passing in the red light might be possible while still avoiding the minor and major accidents.</p>
 <p>I created another feature like <strong>DeadlineClose</strong> to amplify the importance of picking the shortest path which is moving towards the waypoint to replace the deadline feature.</p>
 <p><strong>Light</strong>, <strong>Oncoming</strong> and <strong>Left</strong> features carry the information that will help smartcab to learn traffic rules and reach to its destination safely.</p>
-<p>One interesting feature would be injecting some rules into the features like Left and Oncoming and reduce their information content to True or False by checking the intented moves of the cars on the left and the oncoming direction and checking the light to see if that is a potential collision threat. This would represent a feature like is_left_collision_possible and is_oncoming_collision_possible. This would reduce the feature space to the 1/4th.</p>
-<p><strong>Right</strong> is not relevant if we assume that all the other cars act according to the traffic rules and they are perfect drivers making no minor nor major mistakes. Therefore, if there is a red light, smartcab will stop or turn right which has nothing to the with the cars coming towards right. If there is green light for the smartcab, cars on the right will stop until smartcab passes. Hence, smartcab will have to learn not to care about the cars on the right, but only the cars that are oncoming or coming from left.</p>
+<p>One interesting feature would be injecting some rules into the features like Left and Oncoming and reduce their information content to True or False by checking the intented moves of the cars on the left and the oncoming direction and checking the light to see if that is a potential collision threat. This would make a feature like <strong>is_left_collision_possible</strong> and <strong>is_oncoming_collision_possible</strong>. This would reduce the feature space to the 1/4th.</p>
+<p><strong>Right</strong> is not relevant if we assume that all the other cars act according to the traffic rules and they are perfect drivers making no minor nor major mistakes. Therefore, if there is a red light, smartcab will stop or turn right which has nothing to the with the cars coming from right. If there is green light for the smartcab, cars on the right will stop until smartcab passes. Hence, smartcab will have to learn not to care about the cars on the right, but only the cars that are oncoming or coming from left.</p>
 
 </div>
 </div>
@@ -13600,7 +13600,7 @@ Left(4): forward, left, right, none<br>
 DeadlineClose : True, False</p>
 <p>Size of the state space = 3 x 2 x 4 x 4 x 2 = 192</p>
 <p>As these 5 features capture all of the aspects regarding the reliability and safety and as the feature space defined by these 5 features is finite and it has as small as 192 states, smartcab should be able to learn reaching to its target destination safely and efficiently if given enough time.</p>
-<p><strong>Alternatively</strong>, I modified the Oncoming and Left features to capture if collision is possible with the cars oncoming your coming from the left:</p>
+<p><strong>Alternatively</strong>, I modified the Oncoming and Left features to capture if collision is possible with the cars oncoming your coming from the left, and obtained the following state representation:</p>
 <p>Waypoint(3): forward, left, right<br>
 Light(2): green, red<br>
 is_left_collision_possible(2): True, False<br>
@@ -15367,7 +15367,7 @@ $$ \epsilon = a^t, \textrm{for } 0 < a < 1 \hspace{50px}\epsilon = \frac{1}{t^2}
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Load the &#39;sim_improved-learning&#39; file from the improved Q-Learning simulation</span>
@@ -18638,16 +18638,36 @@ epsilon = a^trial</li>
 <li><strong>Approximately how many training trials were needed for your agent before begining testing?</strong><br>
 About 5000</li>
 <li><strong>What epsilon-tolerance and alpha (learning rate) did you use? Why did you use them?</strong><br>
-alpha = 0.25, alpha changes the importance of instant rewards obtained at every single action.<br>
+alpha = 0.80, alpha changes the importance of instant rewards obtained at every single action.<br>
 epsilon-tolerance=0.01, it helps the agent utilize what it learned in time to make more informed decisions.  </li>
 <li><strong>How much improvement was made with this Q-Learner when compared to the default Q-Learner from the previous section?</strong><br>
-When I didn't include the deadline feature as part of the state definition <strong>Reliability improved to A</strong> and <strong>Safety improved to A+</strong>.<br>
-When I used deadline as a feature, it helped the agent to reach to the goal before the deadline. Deadline feature helped the agent capture the distinction between rewards and punishments. With deadline feature <strong>both the reliability and safety are A+</strong>.</li>
+I tried 3 different things:  </li>
+</ul>
+<p>(1) Feature vector(size = 192): 
+Waypoint(3): forward, left, right<br>
+Light(2): green, red<br>
+Oncoming(4): forward, left, right, none<br>
+Left(4): forward, left, right, none<br>
+DeadlineClose(2) : True, False<br>
+This resulted in reliability(A+) and safety(A+).</p>
+<p>(2) Feature vector(size = 96): 
+Waypoint(3): forward, left, right<br>
+Light(2): green, red<br>
+Oncoming(4): forward, left, right, none<br>
+Left(4): forward, left, right, none<br>
+This resulted in reliability(A) and safety(A+).</p>
+<p>(3) Feature vector(size = 48):<br>
+Waypoint(3): forward, left, right<br>
+Light(2): green, red<br>
+Oncoming(2): True, False<br>
+Left(2): True, False<br>
+DeadlineClose(2) : True, False<br>
+This resulted in reliability(A) and safety(A+).</p>
+<ul>
 <li><strong>Would you say that the Q-Learner results show that your driving agent successfully learned an appropriate policy?</strong><br>
-Yes, because it avoids all major/minor accidents and violations, and can get to the final destination mostly by following the most optimal path. When the feature vector of size 192 is used, smartcab got A+ for both safety and reliability.<br>
-When I used the feature vector of size 48 as explained above, smartcab got A+ safety and A reliability as shown in this workbook.</li>
+Yes, because it avoids major/minor accidents and violations, and can get to the final destination mostly by following the most optimal path.   </li>
 <li><strong>Are you satisfied with the safety and reliability ratings of the <em>Smartcab</em>?</strong><br>
-Yes, I am but there still is a room to become perfect.</li>
+Yes.</li>
 </ul>
 
 </div>

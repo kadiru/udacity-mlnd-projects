@@ -72,7 +72,24 @@ class LearningAgent(Agent):
         
         #state = (waypoint, inputs['light'], inputs['oncoming'], inputs['left'], inputs['right'], deadline)
         #state = (waypoint, inputs['light'], inputs['oncoming'], deadline)
-        state = (waypoint, inputs['light'], inputs['oncoming'], inputs['left'])
+
+        deadline_close = False
+        # if the target is less than 3-block distance
+        if deadline < 5 * 3:
+            deadline_close = True
+
+        is_l_collision_possible = False
+        if inputs['light'] == 'red' and (inputs['left'] == 'forward' or inputs['left'] == 'left'):
+            is_l_collision_possible = True
+
+        is_o_collision_possible = False
+        if inputs['light'] == 'green' and (inputs['oncoming'] == 'forward' or inputs['oncoming'] == 'right'):
+            is_o_collision_possible = True
+
+        #state = (waypoint, inputs['light'], inputs['oncoming'], inputs['left'], deadline_close)
+        state = (waypoint, inputs['light'], is_o_collision_possible, is_l_collision_possible, deadline_close)
+
+
         return state
 
 
@@ -89,13 +106,16 @@ class LearningAgent(Agent):
         # sort them from high value to low value to randomly pick from the actions that have the same highest value
         sorted_a_v = sorted(d_a_v.items(), key=operator.itemgetter(1), reverse=True)
         max_v = sorted_a_v[0][1]
-        actions = []
-        for key, value in d_a_v.iteritems():
-            if value == max_v:
-                actions.append(key)
+        #actions = []
+        #for key, value in d_a_v.iteritems():
+        #    if value == max_v:
+        #        actions.append(key)
                 
-        actionid = random.randint(0,len(actions)-1)
-        return sorted_a_v[actionid][0]
+        #actionid = random.randint(0,len(actions)-1)
+        #return sorted_a_v[actionid][0]
+
+        best_actions = [action for action in self.valid_actions if self.Q[state][action] == max_v]
+        return random.choice(best_actions)
 
 
     def createQ(self, state):
@@ -107,14 +127,16 @@ class LearningAgent(Agent):
         # When learning, check if the 'state' is not in the Q-table
         # If it is not, create a new dictionary for that state
         #   Then, for each action available, set the initial Q-value to 0.0
-        
-        if self.learning:
-            if state not in self.Q:
-                # dictionary of action value pairs
-                d_a_v = {}
-                for action in self.valid_actions:
-                    d_a_v[action]=0.0
-                self.Q[state]=d_a_v
+        if (self.learning) and (state not in self.Q):
+            self.Q[state] = {action: 0.0 for action in self.valid_actions}
+
+        #if self.learning:
+        #    if state not in self.Q:
+        #        # dictionary of action value pairs
+        #        d_a_v = {}
+        #        for action in self.valid_actions:
+        #            d_a_v[action]=0.0
+        #        self.Q[state]=d_a_v
         return
 
 
@@ -194,7 +216,7 @@ def run():
     #    * alpha   - continuous value for the learning rate, default is 0.5
     #agent = env.create_agent(LearningAgent)
     #agent = env.create_agent(LearningAgent, learning=True)
-    agent = env.create_agent(LearningAgent, learning=True, alpha=0.25, epsilon=0.8)
+    agent = env.create_agent(LearningAgent, learning=True, alpha=0.80, epsilon=0.8)
     
     ##############
     # Follow the driving agent
